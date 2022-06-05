@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, height=device-height, viewport-fit=cover">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="shortcut icon" type="image/ico" href="favicon.ico" />
+  <title>Offline Alert</title>
+  <style>
+    body {
+      background-color: rgb(48, 48, 48);
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      height: 100vh;
+      padding: 1rem;
+      margin: 0;
+      box-sizing: border-box;
+    }
+
+    p {
+      max-width: 320px;
+    }
+
+    a {
+      color: rgb(114, 107, 214);
+      text-decoration: none;
+      margin-bottom: 1rem;
+    }
+
+    button {
+      padding: 1rem 2rem;
+      max-width: 320px;
+      width: 100%;
+      font-weight: 700;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Offline Alert</h1>
+
+  <p>In order to make this page works, you need to give it acceso to autoPlay audio on the chrome settings.</p>
+  <a href="https://www.technewstoday.com/how-to-stop-video-autoplay/">Full tutorial here</a>
+
+  <button id="stopItPlease">Test the sound</button>
+  <script>
+    const button = document.getElementById('stopItPlease')
+    const audio = new Audio('./alarm.mp3')
+
+    audio.addEventListener('play', () => {
+      if (audio.duration > 0 || !audio.paused) {
+        button.innerText = 'Stop this suffering please'
+      }
+    })
+
+    audio.addEventListener('pause', () => {
+      if (audio.duration > 0 || !audio.paused) {
+        button.innerText = 'Test the sound'
+      }
+    })
+
+    const showToast = () => {
+      const onLine = navigator.onLine
+
+      if (onLine) {
+        audio.pause()
+        audio.currentTime = 0
+        audio.loop = false
+        return
+      }
+
+      audio.play()
+      audio.loop = true
+    }
+
+    window.addEventListener('online', showToast)
+    window.addEventListener('offline', showToast)
+
+    button.addEventListener('click', () => {
+      if (audio.duration > 0 && !audio.paused) {
+        audio.pause()
+        audio.currentTime = 0
+        audio.loop = false
+
+        return
+      }
+      audio.play()
+      audio.loop = true
+    })
+  </script>
+</body>
+
+</html>
